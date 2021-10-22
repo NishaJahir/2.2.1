@@ -74,6 +74,7 @@ class RefundEventProcedure
         /* @var $order Order */
      
        $order = $eventTriggered->getOrder(); 
+       $parent_order_id = $order->id;
 
         // Checking order type
        if ($order->typeId == OrderType::TYPE_CREDIT_NOTE) {
