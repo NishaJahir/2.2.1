@@ -274,7 +274,7 @@ class PaymentService
             $basket->shippingAmount = $basket->shippingAmountNet;
             $basket->basketAmount = $basket->basketAmountNet;
         }
-        
+        $this->getLogger(__METHOD__)->error('r1', $billingInvoiceAddrId);
         $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddrId;
         $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddrId;
         $address = $this->addressRepository->findAddressById($billingAddressId);
@@ -283,6 +283,7 @@ class PaymentService
             $shippingAddress = $this->addressRepository->findAddressById($shippingAddressId);
         }
         
+        $this->getLogger(__METHOD__)->error('r1', $shippingInvoiceAddrId);
         $customerName = $this->getCustomerName($address);
     
         $account = pluginApp(AccountService::class);
@@ -336,8 +337,9 @@ class PaymentService
         if(!empty($address->phone)) {
             $paymentRequestData['tel'] = $address->phone;
         }
-
+$this->getLogger(__METHOD__)->error('r3', $paymentRequestData);
         $url = $this->getPaymentData($paymentKey, $paymentRequestData, $doRedirect);
+        $this->getLogger(__METHOD__)->error('r4', $url);
         return [
             'data' => $paymentRequestData,
             'url'  => $url
@@ -381,6 +383,7 @@ class PaymentService
      */
     public function getPaymentData($paymentKey, &$paymentRequestData, $doRedirect )
     {
+         $this->getLogger(__METHOD__)->error('r5', $paymentKey);
         $url = $this->getpaymentUrl($paymentKey);
         if(in_array($paymentKey, ['NOVALNET_CC', 'NOVALNET_SEPA', 'NOVALNET_PAYPAL', 'NOVALNET_INVOICE'])) {
             $onHoldLimit = $this->paymentHelper->getNovalnetConfig(strtolower($paymentKey) . '_on_hold');
