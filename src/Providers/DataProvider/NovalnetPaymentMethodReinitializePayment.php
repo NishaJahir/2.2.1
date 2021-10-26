@@ -70,14 +70,14 @@ class NovalnetPaymentMethodReinitializePayment
       }
        
       if ($paymentKey == 'NOVALNET_CC') {
-         $ccFormDetails = $paymentService->getCreditCardAuthenticationCallData($basketRepository->load(), $paymentKey, $orderAmount, $order['billingAddress']['id'], $order['deliveryAddress']['id']);
+         $ccFormDetails = $paymentService->getCreditCardAuthenticationCallData($basketRepository->load(), $paymentKey, $orderAmount, $order['billingAddress'], $order['deliveryAddress']);
          $ccCustomFields = $paymentService->getCcFormFields();
       }
     
      // Get company and birthday values
       $basket = $basketRepository->load();            
       $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $order['billingAddress']['id'];
-      $address = $addressRepository->findAddressById($billingAddressId);
+      $address = !empty($order['billingAddress']) ? $order['billingAddress'] : $addressRepository->findAddressById($billingAddressId);
       foreach ($address->options as $option) {
         if ($option->typeId == 9) {
             $birthday = $option->value;
@@ -85,7 +85,7 @@ class NovalnetPaymentMethodReinitializePayment
       }  
 
       // Set guarantee status
-      $guarantee_status = $paymentService->getGuaranteeStatus($basketRepository->load(), $paymentKey, $orderAmount, $order['billingAddress']['id'], $order['deliveryAddress']['id']);
+      $guarantee_status = $paymentService->getGuaranteeStatus($basketRepository->load(), $paymentKey, $orderAmount, $order['billingAddress'], $order['deliveryAddress']);
       $show_birthday = (empty($address->companyName) && empty($birthday)) ? $guarantee_status : '';
 
       if ($guarantee_status == 'guarantee' && $show_birthday == '') {
