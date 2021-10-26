@@ -279,19 +279,12 @@ class PaymentService
          
         $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddr['id'];
        
-        $address = !empty($billingInvoiceAddr) ? $billingInvoiceAddr : $this->addressRepository->findAddressById($billingAddressId);
-        
-        
-         $this->getLogger(__METHOD__)->error('address', $address);
+        $address = !empty($billingInvoiceAddr) ? (obj) $billingInvoiceAddr : $this->addressRepository->findAddressById($billingAddressId);
         $shippingAddress = $address;
-         $this->getLogger(__METHOD__)->error('s.address', $shippingAddress);
         
         if(!empty($shippingAddressId)){
-            $this->getLogger(__METHOD__)->error('s.address1 if', $shippingAddress);
             $shippingAddress = !empty($shippingInvoiceAddr) ? $shippingInvoiceAddr : $this->addressRepository->findAddressById($shippingAddressId);
         }
-       $this->getLogger(__METHOD__)->error('s.address1', $shippingAddress);
-       
         $customerName = $this->getCustomerName($address);
     
         $account = pluginApp(AccountService::class);
@@ -305,7 +298,7 @@ class PaymentService
             'product'            => $this->paymentHelper->getNovalnetConfig('novalnet_product_id'),
             'tariff'             => $this->paymentHelper->getNovalnetConfig('novalnet_tariff_id'),
             'test_mode'          => (int)($this->config->get($testModeKey) == 'true'),
-            'first_name'         => !empty($address->firstName) ? $address->firstName : $customerName['firstName'],
+            'first_name'         => !empty($address->name2) ? !empty($address->firstName) ? $address->firstName : $customerName['firstName'],
             'last_name'          => !empty($address->lastName) ? $address->lastName : $customerName['lastName'],
             'email'              => $address->email,
             'gender'             => 'u',
@@ -345,7 +338,7 @@ class PaymentService
         if(!empty($address->phone)) {
             $paymentRequestData['tel'] = $address->phone;
         }
-$this->getLogger(__METHOD__)->error('r3', $paymentRequestData);
+$this->getLogger(__METHOD__)->error('req', $paymentRequestData);
         $url = $this->getPaymentData($paymentKey, $paymentRequestData, $doRedirect);
         $this->getLogger(__METHOD__)->error('r4', $url);
         return [
