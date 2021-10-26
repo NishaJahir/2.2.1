@@ -459,10 +459,10 @@ $this->getLogger(__METHOD__)->error('r3', $paymentRequestData);
     public function getCreditCardAuthenticationCallData(Basket $basket, $paymentKey, $orderAmount = 0, $billingInvoiceAddr = [], $shippingInvoiceAddr = []) {
         $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddr['id'];
         $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddr['id'];
-        $billingAddress = $this->addressRepository->findAddressById($billingAddressId);
+        $billingAddress = !empty($billingInvoiceAddr) ? $billingInvoiceAddr : $this->addressRepository->findAddressById($billingAddressId);
         $shippingAddress = $billingAddress;
         if(!empty($shippingAddressId)){
-            $shippingAddress = $this->addressRepository->findAddressById($shippingAddressId);
+            $shippingAddress = !empty($shippingInvoiceAddr) ? $shippingInvoiceAddr : $this->addressRepository->findAddressById($shippingAddressId);
         }
         $customerName = $this->getCustomerName($billingAddress);
         $ccFormRequestParameters = [
@@ -698,7 +698,7 @@ $this->getLogger(__METHOD__)->error('r3', $paymentRequestData);
     * @param int $shippingInvoiceAddrId
     * @return string
     */
-    public function getGuaranteeStatus(Basket $basket, $paymentKey, $orderAmount = 0, $billingInvoiceAddr = [], $shippingInvoiceAddrId = 0)
+    public function getGuaranteeStatus(Basket $basket, $paymentKey, $orderAmount = 0, $billingInvoiceAddr = [], $shippingInvoiceAddr = [])
     {
         // Get payment name in lowercase
         $paymentKeyLow = strtolower((string) $paymentKey);
@@ -709,16 +709,16 @@ $this->getLogger(__METHOD__)->error('r3', $paymentRequestData);
             $minimumAmount = ((preg_match('/^[0-9]*$/', $minimumAmount) && $minimumAmount >= '999')  ? $minimumAmount : '999');
             $amount        = !empty($basket->basketAmount) ? (sprintf('%0.2f', $basket->basketAmount) * 100) : $orderAmount;
 
-            $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddrId;
-            $billingAddress = $this->addressRepository->findAddressById($billingAddressId);
+            $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddr['id'];
+            $billingAddress = !empty($billingInvoiceAddr) ? $billingInvoiceAddr : $this->addressRepository->findAddressById($billingAddressId);
             $customerBillingIsoCode = strtoupper($this->countryRepository->findIsoCode($billingAddress->countryId, 'iso_code_2'));
 
-            $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddrId;
+            $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddr['id'];
 
             $addressValidation = false;
             if(!empty($shippingAddressId))
             {
-                $shippingAddress = $this->addressRepository->findAddressById($shippingAddressId);
+                $shippingAddress = !empty($shippingInvoiceAddr) ? $shippingInvoiceAddr : $this->addressRepository->findAddressById($shippingAddressId);
                 $customerShippingIsoCode = strtoupper($this->countryRepository->findIsoCode($shippingAddress->countryId, 'iso_code_2'));
 
                 // Billing address
