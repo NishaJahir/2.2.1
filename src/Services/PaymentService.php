@@ -277,16 +277,20 @@ class PaymentService
         $this->getLogger(__METHOD__)->error('r1', $billingInvoiceAddrId);
         $this->getLogger(__METHOD__)->error('r1 ship', $shippingInvoiceAddrId);
         $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddrId;
+         $this->getLogger(__METHOD__)->error('r123', $billingAddressId);
         $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddrId;
+         $this->getLogger(__METHOD__)->error('r11', $shippingInvoiceAddrId);
         $address = $this->addressRepository->findAddressById($billingAddressId);
+         $this->getLogger(__METHOD__)->error('address', $address);
         $shippingAddress = $address;
-        
+         $this->getLogger(__METHOD__)->error('s.address', $shippingAddress);
         
         if(!empty($shippingAddressId)){
+            $this->getLogger(__METHOD__)->error('s.address1 if', $shippingAddress);
             $shippingAddress = $this->addressRepository->findAddressById($shippingAddressId);
         }
-        $this->getLogger(__METHOD__)->error('r123', $shippingAddressId);
-        $this->getLogger(__METHOD__)->error('r11', $shippingInvoiceAddrId);
+       $this->getLogger(__METHOD__)->error('s.address1', $shippingAddress);
+       
         $customerName = $this->getCustomerName($address);
     
         $account = pluginApp(AccountService::class);
