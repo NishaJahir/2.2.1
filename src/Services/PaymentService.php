@@ -298,7 +298,7 @@ class PaymentService
             'product'            => $this->paymentHelper->getNovalnetConfig('novalnet_product_id'),
             'tariff'             => $this->paymentHelper->getNovalnetConfig('novalnet_tariff_id'),
             'test_mode'          => (int)($this->config->get($testModeKey) == 'true'),
-            'first_name'         => !empty($address->name2) ? !empty($address->firstName) ? $address->firstName : $customerName['firstName'],
+            'first_name'         => !empty($address->firstName) ? $address->firstName : $customerName['firstName'],
             'last_name'          => !empty($address->lastName) ? $address->lastName : $customerName['lastName'],
             'email'              => $address->email,
             'gender'             => 'u',
