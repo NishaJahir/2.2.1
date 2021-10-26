@@ -290,9 +290,9 @@ class PaymentService
         }
         $customerName = $this->getCustomerName($address);
         
-        $this->getLogger(__METHOD__)->error('arra', $address['name2']);
+       
         $this->getLogger(__METHOD__)->error('obj', $address->name2);
-        $this->getLogger(__METHOD__)->error('a f', $address['firstName']);
+        
         $this->getLogger(__METHOD__)->error('o f', $address->firstName);
         
         
