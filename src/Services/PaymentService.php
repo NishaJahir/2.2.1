@@ -275,15 +275,18 @@ class PaymentService
             $basket->basketAmount = $basket->basketAmountNet;
         }
         $this->getLogger(__METHOD__)->error('r1', $billingInvoiceAddrId);
+        $this->getLogger(__METHOD__)->error('r1 ship', $shippingInvoiceAddrId);
         $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddrId;
         $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddrId;
         $address = $this->addressRepository->findAddressById($billingAddressId);
         $shippingAddress = $address;
+        
+        
         if(!empty($shippingAddressId)){
             $shippingAddress = $this->addressRepository->findAddressById($shippingAddressId);
         }
-        
-        $this->getLogger(__METHOD__)->error('r1', $shippingInvoiceAddrId);
+        $this->getLogger(__METHOD__)->error('r123', $shippingAddressId);
+        $this->getLogger(__METHOD__)->error('r11', $shippingInvoiceAddrId);
         $customerName = $this->getCustomerName($address);
     
         $account = pluginApp(AccountService::class);
@@ -991,4 +994,7 @@ $this->getLogger(__METHOD__)->error('r3', $paymentRequestData);
      
     }
     
+    public function logger($k, $v) {
+        $this->getLogger(__METHOD__)->error($k, $v);
+    }
 }
