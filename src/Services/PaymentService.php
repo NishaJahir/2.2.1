@@ -32,6 +32,9 @@ use Novalnet\Models\TransactionLog;
 use Plenty\Modules\Payment\History\Contracts\PaymentHistoryRepositoryContract;
 use Plenty\Modules\Payment\History\Models\PaymentHistory as PaymentHistoryModel;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
+use Plenty\Modules\Account\Address\Models\Address;
+
+
 /**
  * Class PaymentService
  *
@@ -286,7 +289,13 @@ class PaymentService
             $shippingAddress = !empty($shippingInvoiceAddr) ? $shippingInvoiceAddr : $this->addressRepository->findAddressById($shippingAddressId);
         }
         $customerName = $this->getCustomerName($address);
-    
+        
+        $this->getLogger(__METHOD__)->error('arra', $address['name2']);
+        $this->getLogger(__METHOD__)->error('obj', $address->name2);
+        $this->getLogger(__METHOD__)->error('a f', $address['firstName']);
+        $this->getLogger(__METHOD__)->error('o f', $address->firstName);
+        
+        
         $account = pluginApp(AccountService::class);
         $customerId = $account->getAccountContactId();
         $paymentKeyLower = strtolower((string) $paymentKey);
