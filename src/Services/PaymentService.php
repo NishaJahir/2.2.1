@@ -279,7 +279,7 @@ class PaymentService
          
         $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddr['id'];
        
-        $address = !empty($billingInvoiceAddr) ? (obj) $billingInvoiceAddr : $this->addressRepository->findAddressById($billingAddressId);
+        $address = !empty($billingInvoiceAddr) ? (object) $billingInvoiceAddr : $this->addressRepository->findAddressById($billingAddressId);
         $shippingAddress = $address;
         
         if(!empty($shippingAddressId)){
