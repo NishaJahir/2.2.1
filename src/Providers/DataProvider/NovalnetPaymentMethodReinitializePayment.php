@@ -46,7 +46,7 @@ class NovalnetPaymentMethodReinitializePayment
             $mopId = $property['value'];
         }
     }
-    
+    $paymentService->logger('order', $order);
   
       // Changed payment method key
        $paymentKey = $paymentHelper->getPaymentKeyByMop($mopId);
