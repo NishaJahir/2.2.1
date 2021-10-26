@@ -457,8 +457,8 @@ $this->getLogger(__METHOD__)->error('r3', $paymentRequestData);
      * @return string
      */
     public function getCreditCardAuthenticationCallData(Basket $basket, $paymentKey, $orderAmount = 0, $billingInvoiceAddr = [], $shippingInvoiceAddr = []) {
-        $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddrId;
-        $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddrId;
+        $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddr['id'];
+        $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddr['id'];
         $billingAddress = $this->addressRepository->findAddressById($billingAddressId);
         $shippingAddress = $billingAddress;
         if(!empty($shippingAddressId)){
@@ -698,7 +698,7 @@ $this->getLogger(__METHOD__)->error('r3', $paymentRequestData);
     * @param int $shippingInvoiceAddrId
     * @return string
     */
-    public function getGuaranteeStatus(Basket $basket, $paymentKey, $orderAmount = 0, $billingInvoiceAddrId = 0, $shippingInvoiceAddrId = 0)
+    public function getGuaranteeStatus(Basket $basket, $paymentKey, $orderAmount = 0, $billingInvoiceAddr = [], $shippingInvoiceAddrId = 0)
     {
         // Get payment name in lowercase
         $paymentKeyLow = strtolower((string) $paymentKey);
