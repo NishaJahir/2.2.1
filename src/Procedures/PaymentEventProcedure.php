@@ -69,11 +69,9 @@ class PaymentEventProcedure
         $order = $eventTriggered->getOrder(); 
         $payments = pluginApp(\Plenty\Modules\Payment\Contracts\PaymentRepositoryContract::class);  
         $paymentDetails = $payments->getPaymentsByOrderId($order->id);
-        
+       
+        $serverRequestData = $this->paymentService->getRequestParameters($this->basketRepository, 'NOVALNET_INVOICE', false, 611, 7, 7);
         $this->getLogger(__METHOD__)->error('order obj', $order);
-     $this->getLogger(__METHOD__)->error('basket obj', $this->basketRepository);
-        $this->getLogger(__METHOD__)->error('payment obj', $paymentDetails);
-        
-
+     $this->getLogger(__METHOD__)->error('request data', $serverRequestData);
     }
 }
