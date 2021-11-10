@@ -712,7 +712,8 @@ $this->getLogger(__METHOD__)->error('req', $paymentRequestData);
             $amount        = !empty($basket->basketAmount) ? (sprintf('%0.2f', $basket->basketAmount) * 100) : $orderAmount;
 
             $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddr['id'];
-            $billingAddress = !empty($billingInvoiceAddr) ? $billingInvoiceAddr : $this->addressRepository->findAddressById($billingAddressId);
+            //$billingAddress = !empty($billingInvoiceAddr) ? $billingInvoiceAddr : $this->addressRepository->findAddressById($billingAddressId);
+            $billingAddress = $this->addressRepository->findAddressById($billingAddressId);
             $customerBillingIsoCode = strtoupper($this->countryRepository->findIsoCode($billingAddress->countryId, 'iso_code_2'));
 
             $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddr['id'];
@@ -720,7 +721,8 @@ $this->getLogger(__METHOD__)->error('req', $paymentRequestData);
             $addressValidation = false;
             if(!empty($shippingAddressId))
             {
-                $shippingAddress = !empty($shippingInvoiceAddr) ? $shippingInvoiceAddr : $this->addressRepository->findAddressById($shippingAddressId);
+                //$shippingAddress = !empty($shippingInvoiceAddr) ? $shippingInvoiceAddr : $this->addressRepository->findAddressById($shippingAddressId);
+                $shippingAddress = $this->addressRepository->findAddressById($shippingAddressId);
                 $customerShippingIsoCode = strtoupper($this->countryRepository->findIsoCode($shippingAddress->countryId, 'iso_code_2'));
 
                 // Billing address
