@@ -201,11 +201,25 @@ class NovalnetServiceProvider extends ServiceProvider
             'de' =>  'Novalnet | Rückerstattung',
             'en' =>  'Novalnet | Refund',
         ];
+
         $eventProceduresService->registerProcedure(
             'Novalnet',
             ProcedureEntry::EVENT_TYPE_ORDER,
             $refundProcedureTitle,
             '\Novalnet\Procedures\RefundEventProcedure@run'
+        );
+        
+        // Event for BE order - Payment Process
+        $paymentProcedureTitle = [
+            'de' =>  'Novalnet | Zahlung',
+            'en' =>  'Novalnet | Payment',
+        ];
+        
+        $eventProceduresService->registerProcedure(
+            'Novalnet',
+            ProcedureEntry::EVENT_TYPE_ORDER,
+            $paymentProcedureTitle,
+            '\Novalnet\Procedures\PaymentEventProcedure@run'
         );
         
         // Listen for the event that gets the payment method content
