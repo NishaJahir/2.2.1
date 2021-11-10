@@ -21,6 +21,7 @@ use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Novalnet\Services\PaymentService;
 use Novalnet\Services\TransactionService;
+use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 
 /**
  * Class PaymentEventProcedure
@@ -40,6 +41,8 @@ class PaymentEventProcedure
      * @var Transaction
      */
     private $transaction;
+ 
+   private $basketRepository;
     
     /**
      * Constructor.
@@ -48,10 +51,11 @@ class PaymentEventProcedure
      * @param TransactionService $tranactionService
      */
      
-    public function __construct(PaymentService $paymentService, TransactionService $tranactionService)
+    public function __construct(PaymentService $paymentService, TransactionService $tranactionService, BasketRepositoryContract $basketRepository)
     {
         $this->paymentService  = $paymentService;
         $this->transaction     = $tranactionService;
+        $this->basketRepository = $basketRepository->load();
     }   
     
     /**
@@ -67,6 +71,7 @@ class PaymentEventProcedure
         $paymentDetails = $payments->getPaymentsByOrderId($order->id);
         
         $this->getLogger(__METHOD__)->error('order obj', $order);
+     $this->getLogger(__METHOD__)->error('basket obj', $this->basketRepository);
         $this->getLogger(__METHOD__)->error('payment obj', $paymentDetails);
         
 
