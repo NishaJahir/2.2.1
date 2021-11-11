@@ -22,6 +22,7 @@ use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Novalnet\Services\PaymentService;
 use Novalnet\Services\TransactionService;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
+use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
 
 /**
  * Class PaymentEventProcedure
@@ -43,6 +44,10 @@ class PaymentEventProcedure
     private $transaction;
  
    private $basketRepository;
+ 
+  private $addressRepository;
+ 
+   
     
     /**
      * Constructor.
@@ -51,11 +56,12 @@ class PaymentEventProcedure
      * @param TransactionService $tranactionService
      */
      
-    public function __construct(PaymentService $paymentService, TransactionService $tranactionService, BasketRepositoryContract $basketRepository)
+    public function __construct(PaymentService $paymentService, TransactionService $tranactionService, BasketRepositoryContract $basketRepository, AddressRepositoryContract $addressRepository)
     {
         $this->paymentService  = $paymentService;
         $this->transaction     = $tranactionService;
         $this->basketRepository = $basketRepository->load();
+        $this->addressRepository = $addressRepository;
     }   
     
     /**
@@ -69,9 +75,9 @@ class PaymentEventProcedure
         $order = $eventTriggered->getOrder(); 
         $payments = pluginApp(\Plenty\Modules\Payment\Contracts\PaymentRepositoryContract::class);  
         $paymentDetails = $payments->getPaymentsByOrderId($order->id);
-      
-        $serverRequestData = $this->paymentService->getRequestParameters($this->basketRepository, 'NOVALNET_INVOICE', false, 611);
+        $billingAddress = $this->addressRepository->findAddressById(7);
+        //$serverRequestData = $this->paymentService->getRequestParameters($this->basketRepository, 'NOVALNET_INVOICE', false, 611, [], []);
         $this->getLogger(__METHOD__)->error('order obj', $order);
-     $this->getLogger(__METHOD__)->error('request data we', $serverRequestData);
+     $this->getLogger(__METHOD__)->error('request data we', $billingAddress);
     }
 }
