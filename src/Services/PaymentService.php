@@ -278,12 +278,16 @@ class PaymentService
             $basket->basketAmount = $basket->basketAmountNet;
         }
        
-        $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddr['id'];
+        //$billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : $billingInvoiceAddr['id'];
+        $billingAddressId = !empty($basket->customerInvoiceAddressId) ? $basket->customerInvoiceAddressId : 7;
          
-        $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddr['id'];
+        //$shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : $shippingInvoiceAddr['id'];
+        $shippingAddressId = !empty($basket->customerShippingAddressId) ? $basket->customerShippingAddressId : 7;
        
         $address = !empty($billingInvoiceAddr) ? (object) $billingInvoiceAddr : $this->addressRepository->findAddressById($billingAddressId);
         $shippingAddress = $address;
+        
+        $this->getLogger(__METHOD__)->error('service', $address);
         
         if(!empty($shippingAddressId)){
             $shippingAddress = !empty($shippingInvoiceAddr) ? $shippingInvoiceAddr : $this->addressRepository->findAddressById($shippingAddressId);
