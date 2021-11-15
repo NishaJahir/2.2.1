@@ -471,6 +471,17 @@ $this->getLogger(__METHOD__)->error('req', $paymentRequestData);
             $shippingAddress = !empty($shippingInvoiceAddr) ? $shippingInvoiceAddr : $this->addressRepository->findAddressById($shippingAddressId);
         }
         $customerName = $this->getCustomerName($billingAddress);
+        
+        /** @var \Plenty\Modules\Frontend\Services\VatService $vatService */
+        $vatService = pluginApp(\Plenty\Modules\Frontend\Services\VatService::class);
+
+        //we have to manipulate the basket because its stupid and doesnt know if its netto or gross
+        if(!count($vatService->getCurrentTotalVats())) {
+            $basket->itemSum = $basket->itemSumNet;
+            $basket->shippingAmount = $basket->shippingAmountNet;
+            $basket->basketAmount = $basket->basketAmountNet;
+        }
+        
         $ccFormRequestParameters = [
             'client_key'    => trim($this->config->get('Novalnet.novalnet_client_key')),
         'enforce_3d'    => (int)($this->config->get('Novalnet.' . strtolower((string) $paymentKey) . '_enforce') == 'true'),
